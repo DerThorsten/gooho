@@ -5,7 +5,28 @@ import numpy
 import math
 
 
+# not yet used
+class GooBase(object):
+    def __init__(self):
+        pass
+# not yet used
+class CommonGoo(object):
+    def __init__(self):
+        super(CommonGoo,self).__init__()
 
+        # connections
+        self.maxDegree = 99999
+        self.maxConnectDegree = 2
+        # user interactivity
+        self.removable = False
+        # NODE PYSICS
+        self.density = 1.0
+        self.noseRadius = 1.0
+        # EDGE PHYSICS
+        self.jointType = 'distance' # / 'rope'
+        self.stiffness = 1.0
+        self.edgeLength = 1.0
+        self.edgeStability = 1.0
 
 
 class GooParam(object):
