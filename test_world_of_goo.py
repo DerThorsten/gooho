@@ -10,13 +10,14 @@ import math
 
 class GooParam(object):
     def __init__(self, scale = 1.0):
+        self.gooDensity = 0.1
         self.gooRadius = 1.0 * scale
         self.maxGooDist = self.gooRadius * 14.0
         self.addAsEdgeDist = 2.0 * self.gooRadius
         self.maxGooDegree = 10000
         self.maxConnectTo = 2
-
-
+        self.maxReactionForce = 14.0
+        self.edgeSpringHz = 2.0
 
 
 class GooGraph(nx.Graph):
@@ -27,7 +28,7 @@ class GooGraph(nx.Graph):
 
 
         self.gooFixture=b2FixtureDef(shape=b2CircleShape(radius=(self.param.gooRadius)),
-                            density=0.1, friction=100.2)
+                            density=self.param.gooDensity, friction=100.2)
 
 
     def addGooNode(self, pos):  
@@ -37,7 +38,7 @@ class GooGraph(nx.Graph):
 
     def connectNodes(self, gooA, gooB):
         dfn=b2DistanceJointDef(
-                           frequencyHz=2.0,
+                           frequencyHz=self.param.edgeSpringHz,
                            dampingRatio=0.1,
                            bodyA=gooA,bodyB=gooB,
                            anchorA=gooA.position,
@@ -118,44 +119,20 @@ class GalaxyOfGooTester(Framework):
         self.param = GooParam(scale=1.0)
         self.gooGraph = GooGraph(world=self.world, param=self.param)
 
-        self.maxCreationDist = 15.0
-        self.minCreationDist = 7.0
-        self.maxGooDegree   = 10
-        self.connectNewToMax = 5
-        self.gooRadius = 1.0
-        self.maxReactionForce = 16.0
-        boxSize = 1.0
-        gridShape = [4,2]
-        boxDistance  = [10.0,10.0]
-        bd=boxDistance[0]
-        increment = [boxSize*2 +boxDistance[0], 
-                     boxSize*2 +boxDistance[1]]
+        #self.maxCreationDist = 15.0
+        #self.minCreationDist = 7.0
+        #self.maxGooDegree   = 10
+        #self.connectNewToMax = 5
+   
 
 
         ground=self.world.CreateStaticBody(
-            position=(0,-boxSize),
+            position=(0,0),
             shapes=b2PolygonShape(box=(100,1)),
             friction=100.0
             )
 
         
-
-        self.gooFixture=b2FixtureDef(shape=b2CircleShape(radius=(self.gooRadius)),
-                            density=0.05, friction=100.2)
-
-
-
-
-        for x in range(gridShape[0]):
-            for y in range(gridShape[1]):
-                pos = (increment[0]*x,increment[1]*y)
-                #self.addGoo(pos)
-
-        for x in range(gridShape[0]-1):
-            for y in range(gridShape[1]-1):
-                pos = (increment[0]*x+bd/2,increment[1]*y +bd/2)
-                #self.addGoo(pos)
-
         self.gooMode = True
 
     def numGoo(self):
@@ -203,7 +180,7 @@ class GalaxyOfGooTester(Framework):
             jReacForce=(numpy.array(jReacForce)**2).sum()**(0.5)
             #print jReacForce.round(4)
 
-            if(jReacForce>self.maxReactionForce):
+            if(jReacForce>self.param.maxReactionForce):
                 self.gooGraph.remove_edge(gooA, gooB)
                 self.world.DestroyJoint(joint)
 
