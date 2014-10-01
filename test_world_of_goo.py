@@ -116,7 +116,7 @@ class GalaxyOfGooTester(Framework):
         self.maxGooDegree   = 10
         self.connectNewToMax = 5
         self.gooRadius = 1.0
-        self.maxReactionForce = 12.0
+        self.maxReactionForce = 16.0
         boxSize = 1.0
         gridShape = [4,2]
         boxDistance  = [10.0,10.0]
@@ -134,7 +134,7 @@ class GalaxyOfGooTester(Framework):
         
 
         self.gooFixture=b2FixtureDef(shape=b2CircleShape(radius=(self.gooRadius)),
-                            density=0.1, friction=100.2)
+                            density=0.05, friction=100.2)
 
 
 
