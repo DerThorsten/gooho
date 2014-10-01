@@ -11,7 +11,7 @@ import math
 class GooParam(object):
     def __init__(self, scale = 1.0):
         self.gooRadius = 1.0 * scale
-        self.maxGooDist = self.gooRadius * 8.0
+        self.maxGooDist = self.gooRadius * 14.0
         self.addAsEdgeDist = 2.0 * self.gooRadius
         self.maxGooDegree = 10000
         self.maxConnectTo = 2
@@ -64,7 +64,6 @@ class GooGraph(nx.Graph):
                 if(degree < self.param.maxGooDegree):
                     oPos = otherGoo.position
                     distance = self.nodeDist(pos, oPos)
-                    print 'distance', distance
                     if distance < self.param.maxGooDist:
                         # TODO check if an edge is better
                         candidates.append((otherGoo, distance, oPos))
@@ -82,7 +81,6 @@ class GooGraph(nx.Graph):
                 self.connectNodes(sortedCandidates[0][0], newGoo)
             elif numC >= 2 or (numC ==1 and numGoo == 1):
                 # add goo to graph and add edge
-                print "ADD NEW"
                 if self.param.maxConnectTo ==2 :
 
                     gooA = sortedCandidates[0][0]
@@ -97,7 +95,6 @@ class GooGraph(nx.Graph):
 
                             self.connectNodes(oldGoo, newGoo)
                     else:
-                        print "HAS NO EDGE"
                         self.connectNodes(gooA, gooB)
                 else :
                     raise RuntimeError("not impolemented yet")
@@ -152,7 +149,7 @@ class GalaxyOfGooTester(Framework):
                 pos = (increment[0]*x+bd/2,increment[1]*y +bd/2)
                 #self.addGoo(pos)
 
-        self.gooMode = False
+        self.gooMode = True
 
     def numGoo(self):
         return len(self.gooGraph)
@@ -170,9 +167,6 @@ class GalaxyOfGooTester(Framework):
 
 
     def MouseDown(self, p):
-        """
-        Indicates that there was a left click at point p (world coordinates)
-        """
         if self.gooMode:
             self.gooGraph.manageClick(p)
 
