@@ -49,7 +49,11 @@ class GooGraph(nx.Graph):
 
     def nodeDist(self,a,b):
             return math.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
-    def manageClick(self, pos):
+
+    def manageClick(self, pos ,draggedGoo = None):
+        if draggedGoo is not None:
+            if self.degree(draggedGoo)>0:
+                return
         numGoo = len(self)
         print numGoo
         #pos = b2Vec2(*pos)
@@ -64,7 +68,7 @@ class GooGraph(nx.Graph):
                 if(degree < self.param.maxGooDegree):
                     oPos = otherGoo.position
                     distance = self.nodeDist(pos, oPos)
-                    if distance < self.param.maxGooDist:
+                    if distance < self.param.maxGooDist and distance > self.param.gooRadius*3.0:
                         # TODO check if an edge is better
                         candidates.append((otherGoo, distance, oPos))
             def keyF(t):
@@ -79,7 +83,7 @@ class GooGraph(nx.Graph):
             if(numC == 1 and numGoo ==1):
                 newGoo = self.addGooNode(pos)
                 self.connectNodes(sortedCandidates[0][0], newGoo)
-            elif numC >= 2 or (numC ==1 and numGoo == 1):
+            elif numC >= 2 :
                 # add goo to graph and add edge
                 if self.param.maxConnectTo ==2 :
 
@@ -90,7 +94,10 @@ class GooGraph(nx.Graph):
                     # those goos
                     if(self.has_edge(gooA, gooB)):
 
-                        newGoo = self.addGooNode(pos)
+                        if draggedGoo is None :
+                            newGoo = self.addGooNode(pos) 
+                        else:
+                            newGoo = draggedGoo
                         for oldGoo, dist, oldGooPos in sortedCandidates :
 
                             self.connectNodes(oldGoo, newGoo)
@@ -172,6 +179,17 @@ class GalaxyOfGooTester(Framework):
 
         return super(GalaxyOfGooTester,self).MouseDown(p)
 
+    def MouseUp(self, p):
+        """
+        Left mouse button up.
+        """     
+        if self.mouseJoint:
+            self.gooGraph.manageClick(p, self.mouseJoint.bodyB)
+            self.world.DestroyJoint(self.mouseJoint)
+            self.mouseJoint = None
+
+        if self.bombSpawning:
+            self.CompleteBombSpawn(p)
 
 
 
