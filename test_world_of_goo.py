@@ -69,7 +69,7 @@ class GooGraph(nx.Graph):
                 if(degree < self.param.maxGooDegree):
                     oPos = otherGoo.position
                     distance = self.nodeDist(pos, oPos)
-                    if distance < self.param.maxGooDist and distance > self.param.gooRadius*3.0:
+                    if distance < self.param.maxGooDist and distance > self.param.gooRadius*1.9:
                         # TODO check if an edge is better
                         candidates.append((otherGoo, distance, oPos))
             def keyF(t):
