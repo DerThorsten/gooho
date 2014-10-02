@@ -3,6 +3,56 @@ from box2dframework  import *
 from math import sqrt
 import numpy
 import math
+import pyglet
+import subprocess
+import pygame
+pygame.init()
+
+
+def playSound():
+    try:
+        pygame.mixer.music.load("sounds/discovery1.wav")
+        pygame.mixer.music.play()
+    except:
+        raise RuntimeError("donwload ALL sounds from http://www.sounds-resource.com/pc_computer/wogoo/sound/1485/ ")
+    #pygame.event.wait()
+
+
+
+#pyglet.app.run()
+# import os
+# import urllib
+# import zipfile
+
+# def getunzipped(theurl, thedir):
+#   name = os.path.join(thedir, 'temp.zip')
+#   try:
+#     name, hdrs = urllib.urlretrieve(theurl, name)
+#   except IOError, e:
+#     print "Can't retrieve %r to %r: %s" % (theurl, thedir, e)
+#     return
+#   try:
+#     z = zipfile.ZipFile(name)
+#   except zipfile.error, e:
+#     print "Bad zipfile (from %r): %s" % (theurl, e)
+#     return
+#   for n in z.namelist():
+#     dest = os.path.join(thedir, n)
+#     destdir = os.path.dirname(dest)
+#     if not os.path.isdir(destdir):
+#       os.makedirs(destdir)
+#     data = z.read(n)
+#     f = open(dest, 'w')
+#     f.write(data)
+#     f.close()
+#   z.close()
+#   os.unlink(name)
+
+
+# loc = ""+__file__
+# bn = os.path.basename(__file__)
+# loc = loc[0:len(loc)-len(bn)]+"/dlsounds/"
+# getunzipped('http://www.sounds-resource.com/download/1482/PC Computer - World of Goo - General Sound Effects 12.zip',loc)
 
 
 # not yet used
@@ -67,7 +117,7 @@ class GooGraph(nx.Graph):
                        )
         j=self.world.CreateJoint(dfn)
         self.add_edge(gooA, gooB, joint=j)
-
+        playSound()
 
     def nodeDist(self,a,b):
             return math.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
